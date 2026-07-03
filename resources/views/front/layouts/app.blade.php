@@ -38,8 +38,8 @@
 
     {{-- ============ MASTHEAD ============ --}}
     <header>
-        {{-- baris tanggal & edisi --}}
-        <div class="max-w-6xl mx-auto px-4 py-1.5 flex justify-between text-[11px] font-mono uppercase tracking-wider text-ink/50">
+        {{-- baris tanggal & edisi: desktop saja, biar mobile lebih ringkas --}}
+        <div class="hidden md:flex max-w-6xl mx-auto px-4 py-1.5 justify-between text-[11px] font-mono uppercase tracking-wider text-ink/50">
             <span>{{ now()->translatedFormat('l, d F Y') }}</span>
             <span>Edisi No. {{ now()->format('z') + 1 }}</span>
         </div>
@@ -47,15 +47,24 @@
         {{-- baris logo, menu utama berikon, & pencarian (gradasi warna) --}}
         <div style="background: linear-gradient(115deg, var(--color-header-bg), var(--color-secondary));"
              class="text-brand-headerText">
-            <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-6">
-                <a href="{{ route('home') }}" class="flex items-center gap-3 shrink-0">
+            <div class="max-w-6xl mx-auto px-3 md:px-4 py-3 md:py-4 flex items-center gap-3 md:gap-6">
+
+                {{-- hamburger: mobile only, di kiri --}}
+                <button type="button" aria-label="Buka menu" onclick="document.getElementById('mobileMenu').classList.toggle('hidden')"
+                        class="md:hidden shrink-0 p-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                </button>
+
+                {{-- logo: center di mobile, kiri di desktop --}}
+                <a href="{{ route('home') }}" class="flex items-center gap-3 flex-1 justify-center md:flex-none md:justify-start">
                     @if(!empty($appearance['logo']))
-                        <img src="{{ Storage::url($appearance['logo']) }}" alt="{{ $siteName }}" class="h-9 w-auto">
+                        <img src="{{ Storage::url($appearance['logo']) }}" alt="{{ $siteName }}" class="h-8 md:h-9 w-auto">
                     @else
-                        <span class="font-display text-2xl font-semibold tracking-tight">{{ $siteName }}</span>
+                        <span class="font-display text-xl md:text-2xl font-semibold tracking-tight">{{ $siteName }}</span>
                     @endif
                 </a>
 
+                {{-- menu utama: desktop saja --}}
                 <nav class="hidden md:flex items-center gap-6 text-sm font-medium">
                     <a href="{{ route('home') }}" class="flex items-center gap-1.5 hover:opacity-75 transition">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
@@ -79,34 +88,79 @@
                     </a>
                 </nav>
 
-                <form action="{{ route('search') }}" method="GET" class="flex items-center shrink-0">
+                {{-- pencarian: desktop (form penuh) --}}
+                <form action="{{ route('search') }}" method="GET" class="hidden md:flex items-center shrink-0">
                     <input
                         type="text"
                         name="q"
                         placeholder="Cari berita..."
                         value="{{ request('q') }}"
-                        class="hidden sm:block bg-white/15 placeholder:text-current/60 rounded-l px-3 py-1.5 text-sm w-40 lg:w-56 focus:outline-none focus:bg-white/25 transition"
+                        class="bg-white/15 placeholder:text-current/60 rounded-l px-3 py-1.5 text-sm w-40 lg:w-56 focus:outline-none focus:bg-white/25 transition"
                     >
                     <button type="submit" aria-label="Cari"
-                            class="bg-white/15 sm:rounded-r rounded p-2 hover:bg-white/25 transition">
+                            class="bg-white/15 rounded-r p-2 hover:bg-white/25 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    </button>
+                </form>
+
+                {{-- pencarian: mobile (ikon saja, di kanan) --}}
+                <button type="button" aria-label="Cari" onclick="document.getElementById('mobileSearchBar').classList.toggle('hidden')"
+                        class="md:hidden shrink-0 p-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                </button>
+            </div>
+
+            {{-- search bar mobile: nyembul di bawah header saat ikon cari ditekan --}}
+            <div id="mobileSearchBar" class="md:hidden hidden px-3 pb-3">
+                <form action="{{ route('search') }}" method="GET" class="flex items-center">
+                    <input type="text" name="q" placeholder="Cari berita..." value="{{ request('q') }}" autofocus
+                           class="bg-white/15 placeholder:text-current/60 rounded-l px-3 py-2 text-sm flex-1 focus:outline-none focus:bg-white/25 transition">
+                    <button type="submit" aria-label="Cari" class="bg-white/15 rounded-r p-2.5">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                     </button>
                 </form>
             </div>
+
+            {{-- panel menu hamburger: mobile only, isi link situs (bukan kategori, kategori sudah tampil sebagai bar di bawah) --}}
+            <div id="mobileMenu" class="md:hidden hidden border-t border-white/15 px-4 py-3">
+                <nav class="flex flex-col gap-1 text-sm font-medium">
+                    <a href="{{ route('home') }}" class="flex items-center gap-2.5 py-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+                        Beranda
+                    </a>
+                    <a href="{{ route('kanal.index') }}" class="flex items-center gap-2.5 py-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                        Kanal
+                    </a>
+                    <a href="{{ route('focuses.index') }}" class="flex items-center gap-2.5 py-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="3" x2="12" y2="7"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                        Fokus
+                    </a>
+                    <a href="{{ route('epapers.index') }}" class="flex items-center gap-2.5 py-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                        E-koran
+                    </a>
+                    <a href="{{ route('galleries.index') }}" class="flex items-center gap-2.5 py-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                        Foto
+                    </a>
+                </nav>
+            </div>
         </div>
 
-        {{-- baris kategori (sub-nav dengan tombol panah scroll) --}}
+        {{-- baris kategori (sub-nav): SELALU tampil, mobile & desktop, scroll horizontal --}}
         @if($navCategories->isNotEmpty())
             <div class="bg-brand-primary text-white">
                 <div class="max-w-6xl mx-auto px-2 flex items-center">
+                    {{-- tombol panah: desktop saja, di mobile cukup swipe --}}
                     <button type="button" aria-label="Scroll kiri"
                             onclick="document.getElementById('catScroll').scrollBy({left:-220,behavior:'smooth'})"
-                            class="shrink-0 p-2 hover:opacity-70 transition">
+                            class="hidden md:block shrink-0 p-2 hover:opacity-70 transition">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
                     </button>
 
                     <div id="catScroll" class="overflow-x-auto">
-                        <ul class="flex gap-6 py-2.5 px-2 text-sm font-medium whitespace-nowrap">
+                        <ul class="flex gap-5 md:gap-6 py-2.5 px-3 md:px-2 text-sm font-medium whitespace-nowrap">
                             @foreach($navCategories as $cat)
                                 <li>
                                     <a href="{{ route('categories.show', $cat) }}" class="hover:opacity-75 transition">
@@ -119,7 +173,7 @@
 
                     <button type="button" aria-label="Scroll kanan"
                             onclick="document.getElementById('catScroll').scrollBy({left:220,behavior:'smooth'})"
-                            class="shrink-0 p-2 hover:opacity-70 transition">
+                            class="hidden md:block shrink-0 p-2 hover:opacity-70 transition">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
                     </button>
                 </div>

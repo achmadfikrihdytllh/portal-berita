@@ -27,16 +27,34 @@
                class="block px-3 py-2 rounded hover:bg-white/10 {{ request()->routeIs('admin.news.*') ? 'bg-white/10 text-white' : '' }}">
                 Berita
             </a>
-
             @if($user?->isEditor())
                 <a href="{{ route('admin.categories.index') }}"
-                   class="block px-3 py-2 rounded hover:bg-white/10 {{ request()->routeIs('admin.categories.*') ? 'bg-white/10 text-white' : '' }}">
+                class="block px-3 py-2 rounded hover:bg-white/10 {{ request()->routeIs('admin.categories.*') ? 'bg-white/10 text-white' : '' }}">
                     Kategori
                 </a>
 
                 <a href="{{ route('admin.comments.index') }}"
-                   class="block px-3 py-2 rounded hover:bg-white/10 {{ request()->routeIs('admin.comments.*') ? 'bg-white/10 text-white' : '' }}">
+                class="block px-3 py-2 rounded hover:bg-white/10 {{ request()->routeIs('admin.comments.*') ? 'bg-white/10 text-white' : '' }}">
                     Komentar
+                </a>
+
+                <div class="pt-4 mt-4 border-t border-white/10">
+                    <span class="px-3 text-[11px] font-mono uppercase tracking-wider text-slate-500">Konten Lainnya</span>
+                </div>
+
+                <a href="{{ route('admin.focuses.index') }}"
+                class="block px-3 py-2 rounded hover:bg-white/10 {{ request()->routeIs('admin.focuses.*') ? 'bg-white/10 text-white' : '' }}">
+                    Fokus
+                </a>
+
+                <a href="{{ route('admin.epapers.index') }}"
+                class="block px-3 py-2 rounded hover:bg-white/10 {{ request()->routeIs('admin.epapers.*') ? 'bg-white/10 text-white' : '' }}">
+                    E-koran
+                </a>
+
+                <a href="{{ route('admin.galleries.index') }}"
+                class="block px-3 py-2 rounded hover:bg-white/10 {{ request()->routeIs('admin.galleries.*') ? 'bg-white/10 text-white' : '' }}">
+                    Galeri Foto
                 </a>
             @endif
 

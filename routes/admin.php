@@ -6,6 +6,9 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\SettingController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\FocusController;
+use App\Http\Controllers\Admin\EpaperController;
+use App\Http\Controllers\Admin\PhotoGalleryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +35,10 @@ Route::middleware('role:admin,editor')->group(function () {
     Route::patch('comments/{comment}/approve', [CommentController::class, 'approve'])->name('comments.approve');
     Route::patch('comments/{comment}/spam', [CommentController::class, 'spam'])->name('comments.spam');
     Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+    Route::resource('focuses', FocusController::class)->except(['show']);
+    Route::resource('epapers', EpaperController::class)->except(['show']);
+    Route::resource('galleries', PhotoGalleryController::class)->except(['show']);
+    Route::delete('galleries/images/{image}', [PhotoGalleryController::class, 'destroyImage'])->name('galleries.images.destroy');
 });
 
 // Pengaturan tampilan (warna & logo): khusus admin

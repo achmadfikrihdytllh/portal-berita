@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     @php
-        // Catatan: untuk performa lebih baik, pindahkan query ini ke View Composer
-        // (app/Providers/AppServiceProvider.php) supaya tidak dieksekusi di setiap request layout.
         $appearance = \App\Models\Setting::group('appearance');
         $general = \App\Models\Setting::group('general');
         $siteName = $general['site_name'] ?? 'Portal Berita';
-        $navCategories = \App\Models\Category::active()->parents()->orderBy('order')->take(6)->get();
+        $navCategories = \App\Models\Category::active()->parents()->orderBy('order')->get();
     @endphp
 
     <title>@hasSection('title')@yield('title') &mdash; {{ $siteName }}@else{{ $siteName }}@endif</title>
@@ -36,57 +34,85 @@
 <body class="bg-paper text-ink font-body antialiased">
 
     {{-- ============ MASTHEAD ============ --}}
-    <header class="border-b border-rule">
+    <header>
         {{-- baris tanggal & edisi --}}
-        <div class="max-w-6xl mx-auto px-4 py-1.5 flex justify-between text-[11px] font-mono uppercase tracking-wider text-ink/60">
+        <div class="max-w-6xl mx-auto px-4 py-1.5 flex justify-between text-[11px] font-mono uppercase tracking-wider text-ink/50">
             <span>{{ now()->translatedFormat('l, d F Y') }}</span>
             <span>Edisi No. {{ now()->format('z') + 1 }}</span>
         </div>
 
-        {{-- baris logo & pencarian --}}
-        <div class="bg-brand-headerBg text-brand-headerText">
-            <div class="max-w-6xl mx-auto px-4 py-5 flex items-center justify-between">
-                <a href="{{ route('home') }}" class="flex items-center gap-3">
+        {{-- baris logo, menu utama berikon, & pencarian (gradasi warna) --}}
+        <div style="background: linear-gradient(115deg, var(--color-header-bg), var(--color-secondary));"
+             class="text-brand-headerText">
+            <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-6">
+                <a href="{{ route('home') }}" class="flex items-center gap-3 shrink-0">
                     @if(!empty($appearance['logo']))
-                        <img src="{{ Storage::url($appearance['logo']) }}" alt="{{ $siteName }}" class="h-10 w-auto">
+                        <img src="{{ Storage::url($appearance['logo']) }}" alt="{{ $siteName }}" class="h-9 w-auto">
                     @else
-                        <span class="font-display text-3xl font-semibold tracking-tight">{{ $siteName }}</span>
+                        <span class="font-display text-2xl font-semibold tracking-tight">{{ $siteName }}</span>
                     @endif
                 </a>
 
-                <form action="{{ route('search') }}" method="GET" class="hidden sm:flex items-center border-b border-current/30 focus-within:border-current">
+                <nav class="hidden md:flex items-center gap-6 text-sm font-medium">
+                    <a href="{{ route('home') }}" class="flex items-center gap-1.5 hover:opacity-75 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+                        Beranda
+                    </a>
+                    <a href="{{ route('kanal.index') }}" class="flex items-center gap-1.5 hover:opacity-75 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                        Kanal
+                    </a>
+                    <a href="{{ route('focuses.index') }}" class="flex items-center gap-1.5 hover:opacity-75 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="3" x2="12" y2="7"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                        Fokus
+                    </a>
+                    <a href="{{ route('epapers.index') }}" class="flex items-center gap-1.5 hover:opacity-75 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                        E-koran
+                    </a>
+                    <a href="{{ route('galleries.index') }}" class="flex items-center gap-1.5 hover:opacity-75 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                        Foto
+                    </a>
+                </nav>
+
+                <form action="{{ route('search') }}" method="GET" class="flex items-center shrink-0">
                     <input
                         type="text"
                         name="q"
                         placeholder="Cari berita..."
                         value="{{ request('q') }}"
-                        class="bg-transparent text-sm py-1 px-2 w-52 focus:outline-none placeholder:text-current/40"
+                        class="hidden sm:block bg-white/15 placeholder:text-current/60 rounded-l px-3 py-1.5 text-sm w-40 lg:w-56 focus:outline-none focus:bg-white/25 transition"
                     >
-                    <button type="submit" aria-label="Cari" class="px-2 text-current/70 hover:text-current">
-                        &#128269;
+                    <button type="submit" aria-label="Cari"
+                            class="bg-white/15 sm:rounded-r rounded p-2 hover:bg-white/25 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                     </button>
                 </form>
             </div>
-
-            {{-- navigasi kategori --}}
-            <nav class="max-w-6xl mx-auto px-4 pb-3">
-                <ul class="flex flex-wrap gap-x-6 gap-y-1 text-sm font-medium">
-                    <li><a href="{{ route('home') }}" class="hover:text-brand-primary transition-colors">Beranda</a></li>
-                    @foreach($navCategories as $cat)
-                        <li>
-                            <a href="{{ route('categories.show', $cat) }}" class="hover:text-brand-primary transition-colors">
-                                {{ $cat->name }}
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
-            </nav>
         </div>
+
+        {{-- baris kategori (sub-nav, bisa di-scroll ke samping) --}}
+        @if($navCategories->isNotEmpty())
+            <div class="bg-brand-primary text-white overflow-x-auto">
+                <div class="max-w-6xl mx-auto px-4">
+                    <ul class="flex gap-6 py-2.5 text-sm font-medium whitespace-nowrap">
+                        @foreach($navCategories as $cat)
+                            <li>
+                                <a href="{{ route('categories.show', $cat) }}" class="hover:opacity-75 transition">
+                                    {{ $cat->name }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        @endif
 
         {{-- ticker breaking news --}}
         @isset($breakingTicker)
             @if($breakingTicker->isNotEmpty())
-                <div class="bg-brand-primary text-white overflow-hidden">
+                <div class="bg-ink text-white overflow-hidden">
                     <div class="max-w-6xl mx-auto px-4 py-2 flex items-center gap-3">
                         <span class="shrink-0 text-[11px] font-mono font-semibold uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded">
                             Breaking

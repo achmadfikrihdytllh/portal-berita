@@ -38,6 +38,14 @@ class SettingService
         if (! empty($data['favicon']) && $data['favicon'] instanceof UploadedFile) {
             $this->replaceImage('favicon', $data['favicon']);
         }
+        $socialKeys = ['social_facebook', 'social_twitter', 'social_instagram', 'social_youtube'];
+
+        foreach ($socialKeys as $key) {
+            if (array_key_exists($key, $data)) {
+                $shortKey = str_replace('social_', '', $key);
+                Setting::set($shortKey, $data[$key], type: 'text', group: 'social');
+            }
+}
     }
 
     private function replaceImage(string $key, UploadedFile $file): void

@@ -7,6 +7,7 @@
     @php
         $appearance = \App\Models\Setting::group('appearance');
         $general = \App\Models\Setting::group('general');
+        $social = \App\Models\Setting::group('social');
         $siteName = $general['site_name'] ?? 'Portal Berita';
         $navCategories = \App\Models\Category::active()->parents()->orderBy('order')->get();
     @endphp
@@ -27,6 +28,8 @@
             --color-footer-bg: {{ $appearance['color_footer_bg'] ?? '#111827' }};
             --color-footer-text: {{ $appearance['color_footer_text'] ?? '#f9fafb' }};
         }
+        #catScroll::-webkit-scrollbar { display: none; }
+        #catScroll { scrollbar-width: none; -ms-overflow-style: none; }
     </style>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -92,19 +95,33 @@
             </div>
         </div>
 
-        {{-- baris kategori (sub-nav, bisa di-scroll ke samping) --}}
+        {{-- baris kategori (sub-nav dengan tombol panah scroll) --}}
         @if($navCategories->isNotEmpty())
-            <div class="bg-brand-primary text-white overflow-x-auto">
-                <div class="max-w-6xl mx-auto px-4">
-                    <ul class="flex gap-6 py-2.5 text-sm font-medium whitespace-nowrap">
-                        @foreach($navCategories as $cat)
-                            <li>
-                                <a href="{{ route('categories.show', $cat) }}" class="hover:opacity-75 transition">
-                                    {{ $cat->name }}
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
+            <div class="bg-brand-primary text-white">
+                <div class="max-w-6xl mx-auto px-2 flex items-center">
+                    <button type="button" aria-label="Scroll kiri"
+                            onclick="document.getElementById('catScroll').scrollBy({left:-220,behavior:'smooth'})"
+                            class="shrink-0 p-2 hover:opacity-70 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                    </button>
+
+                    <div id="catScroll" class="overflow-x-auto">
+                        <ul class="flex gap-6 py-2.5 px-2 text-sm font-medium whitespace-nowrap">
+                            @foreach($navCategories as $cat)
+                                <li>
+                                    <a href="{{ route('categories.show', $cat) }}" class="hover:opacity-75 transition">
+                                        {{ $cat->name }}
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+
+                    <button type="button" aria-label="Scroll kanan"
+                            onclick="document.getElementById('catScroll').scrollBy({left:220,behavior:'smooth'})"
+                            class="shrink-0 p-2 hover:opacity-70 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
                 </div>
             </div>
         @endif
@@ -153,7 +170,7 @@
 
     {{-- ============ FOOTER ============ --}}
     <footer class="bg-brand-footerBg text-brand-footerText mt-16">
-        <div class="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div class="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-4 gap-10">
             <div>
                 <span class="font-display text-2xl font-semibold">{{ $siteName }}</span>
                 <p class="mt-3 text-sm opacity-70 leading-relaxed">
@@ -162,24 +179,64 @@
             </div>
 
             <div>
-                <h3 class="font-mono text-xs uppercase tracking-wider opacity-60 mb-3">Kategori</h3>
+                <h3 class="font-mono text-xs uppercase tracking-wider opacity-60 mb-3">Kanal Utama</h3>
                 <ul class="space-y-1.5 text-sm">
-                    @foreach($navCategories as $cat)
+                    @foreach($navCategories->take(8) as $cat)
                         <li><a href="{{ route('categories.show', $cat) }}" class="opacity-80 hover:opacity-100">{{ $cat->name }}</a></li>
                     @endforeach
+                    <li><a href="{{ route('kanal.index') }}" class="opacity-80 hover:opacity-100 font-medium">Lihat semua kanal &rarr;</a></li>
                 </ul>
+            </div>
+
+            <div>
+                <h3 class="font-mono text-xs uppercase tracking-wider opacity-60 mb-3">Jelajahi</h3>
+                <ul class="space-y-1.5 text-sm mb-6">
+                    <li><a href="{{ route('focuses.index') }}" class="opacity-80 hover:opacity-100">Fokus</a></li>
+                    <li><a href="{{ route('epapers.index') }}" class="opacity-80 hover:opacity-100">E-koran</a></li>
+                    <li><a href="{{ route('galleries.index') }}" class="opacity-80 hover:opacity-100">Foto</a></li>
+                </ul>
+
+                @if(collect($social)->filter()->isNotEmpty())
+                    <h3 class="font-mono text-xs uppercase tracking-wider opacity-60 mb-3">Ikuti Kami</h3>
+                    <div class="flex gap-3">
+                        @if(!empty($social['facebook']))
+                            <a href="{{ $social['facebook'] }}" target="_blank" rel="noopener" aria-label="Facebook"
+                               class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg>
+                            </a>
+                        @endif
+                        @if(!empty($social['twitter']))
+                            <a href="{{ $social['twitter'] }}" target="_blank" rel="noopener" aria-label="Twitter/X"
+                               class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.6 8.7L23 22h-7l-5.5-6.8L4.2 22H1l8.2-9.4L1 2h7.2l5 6.2L18.9 2zm-1.2 18h1.7L7.4 4h-1.8l12.1 16z"/></svg>
+                            </a>
+                        @endif
+                        @if(!empty($social['instagram']))
+                            <a href="{{ $social['instagram'] }}" target="_blank" rel="noopener" aria-label="Instagram"
+                               class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+                            </a>
+                        @endif
+                        @if(!empty($social['youtube']))
+                            <a href="{{ $social['youtube'] }}" target="_blank" rel="noopener" aria-label="YouTube"
+                               class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M23 12s0-3.6-.5-5.3c-.3-1-1.1-1.8-2-2C18.9 4.2 12 4.2 12 4.2s-6.9 0-8.5.5c-1 .2-1.8 1-2 2C1 8.4 1 12 1 12s0 3.6.5 5.3c.3 1 1.1 1.8 2 2 1.6.5 8.5.5 8.5.5s6.9 0 8.5-.5c1-.2 1.8-1 2-2 .5-1.7.5-5.3.5-5.3zM9.8 15.5v-7l6 3.5-6 3.5z"/></svg>
+                            </a>
+                        @endif
+                    </div>
+                @endif
             </div>
 
             <div>
                 <h3 class="font-mono text-xs uppercase tracking-wider opacity-60 mb-3">Newsletter</h3>
                 <p class="text-sm opacity-70 mb-3">Dapatkan ringkasan berita pilihan setiap pagi.</p>
-                <form action="{{ route('newsletter.subscribe') }}" method="POST" class="flex gap-2">
+                <form action="{{ route('newsletter.subscribe') }}" method="POST" class="flex flex-col gap-2">
                     @csrf
                     <input
                         type="email" name="email" required placeholder="Alamat email"
-                        class="flex-1 min-w-0 rounded px-3 py-2 text-sm text-ink"
+                        class="rounded px-3 py-2 text-sm text-ink"
                     >
-                    <button type="submit" class="shrink-0 bg-brand-primary text-white text-sm px-4 py-2 rounded font-medium hover:opacity-90">
+                    <button type="submit" class="bg-brand-primary text-white text-sm px-4 py-2 rounded font-medium hover:opacity-90">
                         Langganan
                     </button>
                 </form>

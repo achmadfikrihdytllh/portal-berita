@@ -60,7 +60,31 @@
                         </div>
                     </div>
                 </div>
+                        <div class="bg-white border border-slate-200 rounded-lg p-5">
+                            <h2 class="font-semibold mb-1">Media Sosial</h2>
+                            <p class="text-sm text-slate-500 mb-4">Ikon otomatis muncul di footer situs kalau linknya diisi. Kosongkan kalau tidak punya.</p>
 
+                            @php
+                                $socialFields = [
+                                    'facebook'  => ['Facebook', 'https://facebook.com/namamu'],
+                                    'twitter'   => ['Twitter / X', 'https://x.com/namamu'],
+                                    'instagram' => ['Instagram', 'https://instagram.com/namamu'],
+                                    'youtube'   => ['YouTube', 'https://youtube.com/@namamu'],
+                                ];
+                            @endphp
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                @foreach($socialFields as $key => [$label, $placeholder])
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">{{ $label }}</label>
+                                        <input type="url" name="social_{{ $key }}" placeholder="{{ $placeholder }}"
+                                            value="{{ old('social_'.$key, $social[$key] ?? '') }}"
+                                            class="w-full border border-slate-300 rounded px-3 py-2 text-sm">
+                                        @error('social_'.$key)<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
                 <div class="bg-white border border-slate-200 rounded-lg p-5">
                     <h2 class="font-semibold mb-1">Warna Situs</h2>
                     <p class="text-sm text-slate-500 mb-4">Perubahan langsung terlihat di panel pratinjau sebelah kanan.</p>

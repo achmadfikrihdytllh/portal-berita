@@ -24,6 +24,10 @@ class UpdateAppearanceRequest extends FormRequest
             'color_footer_text' => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
             'logo'             => ['nullable', 'image', 'max:1024'],
             'favicon'          => ['nullable', 'image', 'max:512'],
+            'social_facebook'  => ['nullable', 'url', 'max:255'],
+            'social_twitter'   => ['nullable', 'url', 'max:255'],
+            'social_instagram' => ['nullable', 'url', 'max:255'],
+            'social_youtube'   => ['nullable', 'url', 'max:255'],
         ];
     }
 

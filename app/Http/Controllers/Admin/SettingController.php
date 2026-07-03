@@ -15,12 +15,14 @@ class SettingController extends Controller
     {
     }
 
+
     public function appearance(): View
     {
         $general = Setting::group('general');
         $appearance = Setting::group('appearance');
+        $social = Setting::group('social');
 
-        return view('admin.settings.appearance', compact('general', 'appearance'));
+        return view('admin.settings.appearance', compact('general', 'appearance', 'social'));
     }
 
     public function updateAppearance(UpdateAppearanceRequest $request): RedirectResponse

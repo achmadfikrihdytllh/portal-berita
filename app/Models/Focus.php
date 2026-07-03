@@ -34,7 +34,7 @@ class Focus extends Model
             ->orderBy('focus_news.order');
     }
 
-     public function scopePublished(\Illuminate\Database\Eloquent\Builder $query)
+     public function scopeActive(\Illuminate\Database\Eloquent\Builder $query)
     {
         return $query->where('is_active', true);
     }

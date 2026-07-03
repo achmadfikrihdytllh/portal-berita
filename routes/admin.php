@@ -45,4 +45,6 @@ Route::middleware('role:admin,editor')->group(function () {
 Route::middleware('role:admin')->group(function () {
     Route::get('settings/appearance', [SettingController::class, 'appearance'])->name('settings.appearance');
     Route::put('settings/appearance', [SettingController::class, 'updateAppearance'])->name('settings.appearance.update');
+    Route::delete('settings/appearance/{key}', [SettingController::class, 'removeAppearanceImage'])
+        ->name('settings.appearance.remove-image');
 });

@@ -32,9 +32,13 @@
                             <div>
                                 <label class="block text-sm font-medium mb-1">Logo</label>
                                 <input type="file" name="logo" accept="image/*" onchange="previewImage(this, 'logo-preview')"
-                                       class="w-full text-sm border border-slate-300 rounded px-3 py-2">
+                                    class="w-full text-sm border border-slate-300 rounded px-3 py-2">
                                 @if(!empty($appearance['logo']))
-                                    <img id="logo-preview" src="{{ Storage::url($appearance['logo']) }}" class="mt-2 h-10 object-contain">
+                                    <div class="flex items-center gap-3 mt-2">
+                                        <img id="logo-preview" src="{{ Storage::url($appearance['logo']) }}" class="h-10 object-contain">
+                                        <button type="submit" form="remove-logo-form" onclick="return confirm('Hapus logo?')"
+                                                class="text-xs text-red-600 underline">Hapus</button>
+                                    </div>
                                 @else
                                     <img id="logo-preview" class="mt-2 h-10 object-contain hidden">
                                 @endif
@@ -42,9 +46,13 @@
                             <div>
                                 <label class="block text-sm font-medium mb-1">Favicon</label>
                                 <input type="file" name="favicon" accept="image/*" onchange="previewImage(this, 'favicon-preview')"
-                                       class="w-full text-sm border border-slate-300 rounded px-3 py-2">
+                                    class="w-full text-sm border border-slate-300 rounded px-3 py-2">
                                 @if(!empty($appearance['favicon']))
-                                    <img id="favicon-preview" src="{{ Storage::url($appearance['favicon']) }}" class="mt-2 h-8 w-8 object-contain">
+                                    <div class="flex items-center gap-3 mt-2">
+                                        <img id="favicon-preview" src="{{ Storage::url($appearance['favicon']) }}" class="h-8 w-8 object-contain">
+                                        <button type="submit" form="remove-favicon-form" onclick="return confirm('Hapus favicon?')"
+                                                class="text-xs text-red-600 underline">Hapus</button>
+                                    </div>
                                 @else
                                     <img id="favicon-preview" class="mt-2 h-8 w-8 object-contain hidden">
                                 @endif
@@ -132,6 +140,16 @@
             </div>
 
         </div>
+    </form>
+
+    {{-- Form terpisah untuk hapus logo/favicon, HARUS di luar #appearance-form (HTML tidak boleh nested form) --}}
+    <form id="remove-logo-form" action="{{ route('admin.settings.appearance.remove-image', 'logo') }}" method="POST" class="hidden">
+        @csrf
+        @method('DELETE')
+    </form>
+    <form id="remove-favicon-form" action="{{ route('admin.settings.appearance.remove-image', 'favicon') }}" method="POST" class="hidden">
+        @csrf
+        @method('DELETE')
     </form>
 
     <script>

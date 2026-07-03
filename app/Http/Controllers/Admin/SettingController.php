@@ -15,9 +15,6 @@ class SettingController extends Controller
     {
     }
 
-    /**
-     * Halaman pengaturan tampilan: warna header/footer/tombol + logo + favicon.
-     */
     public function appearance(): View
     {
         $general = Setting::group('general');
@@ -43,5 +40,16 @@ class SettingController extends Controller
         return redirect()
             ->route('admin.settings.appearance')
             ->with('success', 'Pengaturan tampilan berhasil disimpan.');
+    }
+
+    public function removeAppearanceImage(string $key): RedirectResponse
+    {
+        abort_unless(in_array($key, ['logo', 'favicon']), 404);
+
+        $this->settingService->removeImage($key);
+
+        return redirect()
+            ->route('admin.settings.appearance')
+            ->with('success', ucfirst($key) . ' berhasil dihapus.');
     }
 }

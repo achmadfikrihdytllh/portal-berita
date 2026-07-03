@@ -8,10 +8,7 @@ use Illuminate\Support\Facades\Storage;
 
 class SettingService
 {
-    /**
-     * Simpan banyak setting sekaligus dari form.
-     * $data contoh: ['site_name' => '...', 'color_primary' => '#2563eb', 'logo' => UploadedFile, ...]
-     */
+
     public function saveAppearance(array $data): void
     {
         $colorKeys = [
@@ -54,5 +51,16 @@ class SettingService
         $newPath = $file->store('branding', 'public');
 
         Setting::set($key, $newPath, type: 'image', group: 'appearance');
+    }
+
+    public function removeImage(string $key): void
+    {
+        $path = Setting::get($key);
+
+        if ($path && Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
+
+        Setting::set($key, null, type: 'image', group: 'appearance');
     }
 }

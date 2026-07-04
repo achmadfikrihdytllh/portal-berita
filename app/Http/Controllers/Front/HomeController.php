@@ -8,6 +8,7 @@ use App\Models\News;
 use App\Models\PhotoGallery;
 use App\Models\Tag;
 use Illuminate\View\View;
+use App\Models\Epaper;
 
 class HomeController extends Controller
 {
@@ -46,6 +47,12 @@ class HomeController extends Controller
             ->take(8)
             ->get();
 
+        // Edisi E-koran terbaru untuk carousel "E-koran"
+        $epapers = Epaper::published()
+            ->latest('edition_date')
+            ->take(8)
+            ->get();
+
         // Tag terpopuler (berdasarkan jumlah berita published yang memakainya)
         $popularTags = Tag::query()
             ->withCount(['news' => fn ($q) => $q->published()])
@@ -80,7 +87,7 @@ class HomeController extends Controller
 
         return view('front.home', compact(
             'headline', 'latest', 'trending', 'jelajah',
-            'galleries', 'popularTags', 'spotlightCategories', 'remainingCategories'
+            'galleries', 'epapers', 'popularTags', 'spotlightCategories', 'remainingCategories'
         ));
     }
 }

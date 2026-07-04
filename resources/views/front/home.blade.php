@@ -135,7 +135,6 @@
             </div>
 
             <div class="relative group/carousel">
-                {{-- tombol panah kiri: hologram/glassy, transparan, muncul saat hover --}}
                 <button type="button" aria-label="Geser kiri"
                         onclick="document.getElementById('galleryScroll').scrollBy({left:-300,behavior:'smooth'})"
                         class="hidden md:flex absolute left-0 top-0 bottom-0 z-10 w-14 items-center justify-start pl-1
@@ -147,7 +146,6 @@
                     </span>
                 </button>
 
-                {{-- tombol panah kanan --}}
                 <button type="button" aria-label="Geser kanan"
                         onclick="document.getElementById('galleryScroll').scrollBy({left:300,behavior:'smooth'})"
                         class="hidden md:flex absolute right-0 top-0 bottom-0 z-10 w-14 items-center justify-end pr-1
@@ -182,6 +180,64 @@
                             </h3>
                             <div class="mt-0.5 text-[11px] text-ink/40 font-mono">
                                 {{ $gallery->published_at?->diffForHumans() }}
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    {{-- ============ E-KORAN: carousel horizontal, scrollbar tersembunyi + tombol panah hologram ============ --}}
+    @if($epapers->isNotEmpty())
+        <section class="py-10 border-b border-rule">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="font-display text-2xl font-semibold">E-koran</h2>
+                <a href="{{ route('epapers.index') }}" class="text-sm font-mono text-brand-primary hover:underline">Lihat semua &rarr;</a>
+            </div>
+
+            <div class="relative group/carousel">
+                <button type="button" aria-label="Geser kiri"
+                        onclick="document.getElementById('epaperScroll').scrollBy({left:-260,behavior:'smooth'})"
+                        class="hidden md:flex absolute left-0 top-0 bottom-0 z-10 w-14 items-center justify-start pl-1
+                               bg-gradient-to-r from-paper/90 via-paper/40 to-transparent
+                               opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300">
+                    <span class="w-9 h-9 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-lg
+                                 flex items-center justify-center text-ink/70 hover:bg-white/70 hover:scale-110 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                    </span>
+                </button>
+
+                <button type="button" aria-label="Geser kanan"
+                        onclick="document.getElementById('epaperScroll').scrollBy({left:260,behavior:'smooth'})"
+                        class="hidden md:flex absolute right-0 top-0 bottom-0 z-10 w-14 items-center justify-end pr-1
+                               bg-gradient-to-l from-paper/90 via-paper/40 to-transparent
+                               opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300">
+                    <span class="w-9 h-9 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-lg
+                                 flex items-center justify-center text-ink/70 hover:bg-white/70 hover:scale-110 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                    </span>
+                </button>
+
+                <div class="flex gap-5 overflow-x-auto pb-2 snap-x snap-mandatory no-scrollbar" id="epaperScroll">
+                    @foreach($epapers as $epaper)
+                        <a href="{{ route('epapers.show', $epaper) }}"
+                           class="group shrink-0 w-40 snap-start">
+                            <div class="relative overflow-hidden rounded-lg bg-ink/5 aspect-[3/4] shadow-sm">
+                                @if($epaper->cover_image)
+                                    <img src="{{ Storage::url($epaper->cover_image) }}" alt="{{ $epaper->title }}"
+                                         class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105">
+                                @else
+                                    <div class="h-full w-full flex items-center justify-center text-ink/30 font-display text-sm text-center px-2">
+                                        {{ $epaper->title }}
+                                    </div>
+                                @endif
+                            </div>
+                            <h3 class="mt-2 text-sm font-medium leading-snug group-hover:text-brand-primary line-clamp-2">
+                                {{ $epaper->title }}
+                            </h3>
+                            <div class="mt-0.5 text-[11px] text-ink/40 font-mono">
+                                {{ \Carbon\Carbon::parse($epaper->edition_date)->diffForHumans() }}
                             </div>
                         </a>
                     @endforeach
@@ -228,7 +284,6 @@
         <h2 class="font-display text-2xl font-semibold mb-6">Jelajah Berita</h2>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {{-- List berita, scroll sendiri terpisah dari scroll halaman --}}
             <div class="lg:col-span-2 max-h-[700px] overflow-y-auto pr-2 space-y-6 thin-scrollbar">
                 @foreach($jelajah as $item)
                     <div class="flex gap-4 pb-6 border-b border-rule last:border-b-0">
@@ -260,7 +315,6 @@
                 @endforeach
             </div>
 
-            {{-- Sidebar Terpopuler, sticky mengikuti scroll halaman --}}
             <div class="lg:sticky lg:top-24 self-start">
                 <h3 class="font-mono text-xs uppercase tracking-wider text-ink/50 pb-3 border-b border-rule mb-4">
                     Terpopuler

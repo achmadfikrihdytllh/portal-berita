@@ -30,6 +30,18 @@
         }
         #catScroll::-webkit-scrollbar { display: none; }
         #catScroll { scrollbar-width: none; -ms-overflow-style: none; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+
+        .thin-scrollbar::-webkit-scrollbar { width: 6px; }
+        .thin-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .thin-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 999px;
+        }
+        .thin-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.3); }
+        .thin-scrollbar { scrollbar-width: thin; scrollbar-color: rgba(0, 0, 0, 0.15) transparent; }
     </style>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -88,8 +100,8 @@
                     </a>
                 </nav>
 
-                {{-- pencarian: desktop (form penuh) --}}
-                <form action="{{ route('search') }}" method="GET" class="hidden md:flex items-center shrink-0">
+                {{-- pencarian: desktop (form penuh), didorong ke pojok kanan --}}
+                <form action="{{ route('search') }}" method="GET" class="hidden md:flex items-center shrink-0 md:ml-auto">
                     <input
                         type="text"
                         name="q"

@@ -126,7 +126,7 @@
         </section>
     @endif
 
-    {{-- ============ GALERI FOTO: carousel horizontal ============ --}}
+    {{-- ============ GALERI FOTO: carousel horizontal, scrollbar tersembunyi + tombol panah hologram ============ --}}
     @if($galleries->isNotEmpty())
         <section class="py-10 border-b border-rule">
             <div class="flex items-center justify-between mb-6">
@@ -134,32 +134,58 @@
                 <a href="{{ route('galleries.index') }}" class="text-sm font-mono text-brand-primary hover:underline">Lihat semua &rarr;</a>
             </div>
 
-            <div class="flex gap-5 overflow-x-auto pb-2 snap-x snap-mandatory" id="galleryScroll">
-                @foreach($galleries as $gallery)
-                    <a href="{{ route('galleries.show', $gallery) }}"
-                       class="group shrink-0 w-56 snap-start">
-                        <div class="relative overflow-hidden rounded-lg bg-ink/5 aspect-[4/3]">
-                            @if($gallery->cover_image)
-                                <img src="{{ Storage::url($gallery->cover_image) }}" alt="{{ $gallery->title }}"
-                                     class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105">
-                            @else
-                                <div class="h-full w-full flex items-center justify-center text-ink/30 font-display text-sm">
-                                    Galeri
-                                </div>
-                            @endif
-                            <span class="absolute top-2 right-2 bg-black/60 text-white text-[10px] font-mono px-1.5 py-0.5 rounded flex items-center gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-                                {{ $gallery->images->count() }}
-                            </span>
-                        </div>
-                        <h3 class="mt-2 text-sm font-medium leading-snug group-hover:text-brand-primary line-clamp-2">
-                            {{ $gallery->title }}
-                        </h3>
-                        <div class="mt-0.5 text-[11px] text-ink/40 font-mono">
-                            {{ $gallery->published_at?->diffForHumans() }}
-                        </div>
-                    </a>
-                @endforeach
+            <div class="relative group/carousel">
+                {{-- tombol panah kiri: hologram/glassy, transparan, muncul saat hover --}}
+                <button type="button" aria-label="Geser kiri"
+                        onclick="document.getElementById('galleryScroll').scrollBy({left:-300,behavior:'smooth'})"
+                        class="hidden md:flex absolute left-0 top-0 bottom-0 z-10 w-14 items-center justify-start pl-1
+                               bg-gradient-to-r from-paper/90 via-paper/40 to-transparent
+                               opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300">
+                    <span class="w-9 h-9 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-lg
+                                 flex items-center justify-center text-ink/70 hover:bg-white/70 hover:scale-110 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                    </span>
+                </button>
+
+                {{-- tombol panah kanan --}}
+                <button type="button" aria-label="Geser kanan"
+                        onclick="document.getElementById('galleryScroll').scrollBy({left:300,behavior:'smooth'})"
+                        class="hidden md:flex absolute right-0 top-0 bottom-0 z-10 w-14 items-center justify-end pr-1
+                               bg-gradient-to-l from-paper/90 via-paper/40 to-transparent
+                               opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300">
+                    <span class="w-9 h-9 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-lg
+                                 flex items-center justify-center text-ink/70 hover:bg-white/70 hover:scale-110 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                    </span>
+                </button>
+
+                <div class="flex gap-5 overflow-x-auto pb-2 snap-x snap-mandatory no-scrollbar" id="galleryScroll">
+                    @foreach($galleries as $gallery)
+                        <a href="{{ route('galleries.show', $gallery) }}"
+                           class="group shrink-0 w-56 snap-start">
+                            <div class="relative overflow-hidden rounded-lg bg-ink/5 aspect-[4/3]">
+                                @if($gallery->cover_image)
+                                    <img src="{{ Storage::url($gallery->cover_image) }}" alt="{{ $gallery->title }}"
+                                         class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105">
+                                @else
+                                    <div class="h-full w-full flex items-center justify-center text-ink/30 font-display text-sm">
+                                        Galeri
+                                    </div>
+                                @endif
+                                <span class="absolute top-2 right-2 bg-black/60 text-white text-[10px] font-mono px-1.5 py-0.5 rounded flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                                    {{ $gallery->images->count() }}
+                                </span>
+                            </div>
+                            <h3 class="mt-2 text-sm font-medium leading-snug group-hover:text-brand-primary line-clamp-2">
+                                {{ $gallery->title }}
+                            </h3>
+                            <div class="mt-0.5 text-[11px] text-ink/40 font-mono">
+                                {{ $gallery->published_at?->diffForHumans() }}
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
             </div>
         </section>
     @endif
@@ -197,13 +223,13 @@
         </section>
     @endforeach
 
-    {{-- ============ JELAJAH BERITA: list scroll independen + sidebar Terpopuler ============ --}}
+    {{-- ============ JELAJAH BERITA: list scroll independen (scrollbar tipis) + sidebar Terpopuler ============ --}}
     <section class="py-10">
         <h2 class="font-display text-2xl font-semibold mb-6">Jelajah Berita</h2>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {{-- List berita, scroll sendiri terpisah dari scroll halaman --}}
-            <div class="lg:col-span-2 max-h-[700px] overflow-y-auto pr-2 space-y-6">
+            <div class="lg:col-span-2 max-h-[700px] overflow-y-auto pr-2 space-y-6 thin-scrollbar">
                 @foreach($jelajah as $item)
                     <div class="flex gap-4 pb-6 border-b border-rule last:border-b-0">
                         <a href="{{ route('news.show', $item) }}" class="shrink-0 block w-28 h-20 sm:w-36 sm:h-24 rounded overflow-hidden bg-ink/5">

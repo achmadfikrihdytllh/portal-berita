@@ -71,7 +71,7 @@ class DummyContentSeeder extends Seeder
                 'title'        => 'Edisi ' . $date->translatedFormat('l, d F Y'),
                 'edition_date' => $date->toDateString(),
                 'cover_image'  => $cover,
-                'file_path'    => null, // butuh PDF asli, dikosongkan dulu
+                'file_path'    => 'epapers/placeholder.pdf', // dummy, ganti manual nanti lewat admin
                 'is_published' => true,
             ]);
 

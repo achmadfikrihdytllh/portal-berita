@@ -18,11 +18,28 @@
             </h2>
             <ol class="space-y-4">
                 @forelse($trending as $i => $item)
-                    <li class="flex gap-3">
-                        <span class="font-display text-2xl text-ink/20 leading-none">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
-                        <a href="{{ route('news.show', $item) }}" class="text-sm font-medium leading-snug hover:text-brand-primary">
-                            {{ $item->title }}
+                    <li class="flex gap-3 items-start">
+                        <span class="font-display text-2xl text-ink/20 leading-none shrink-0 pt-1">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
+
+                        <a href="{{ route('news.show', $item) }}" class="shrink-0 block w-16 h-12 rounded overflow-hidden bg-ink/5">
+                            @if($item->thumbnail)
+                                <img src="{{ Storage::url($item->thumbnail) }}" alt="{{ $item->title }}" class="w-full h-full object-cover">
+                            @else
+                                <div class="w-full h-full flex items-center justify-center text-ink/30 text-[9px] font-mono text-center px-1">
+                                    {{ $item->category->name ?? 'Berita' }}
+                                </div>
+                            @endif
                         </a>
+
+                        <div class="min-w-0">
+                            <a href="{{ route('news.show', $item) }}" class="text-sm font-medium leading-snug hover:text-brand-primary line-clamp-2">
+                                {{ $item->title }}
+                            </a>
+                            <div class="mt-1 flex items-center gap-1 text-[11px] text-ink/40 font-mono">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                {{ number_format($item->views) }}
+                            </div>
+                        </div>
                     </li>
                 @empty
                     <li class="text-sm text-ink/50">Belum ada berita.</li>

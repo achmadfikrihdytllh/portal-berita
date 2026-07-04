@@ -25,6 +25,7 @@ class HomeController extends Controller
             ->get();
 
         $trending = News::published()
+            ->with('category')
             ->trending()
             ->take(5)
             ->get();
@@ -39,6 +40,7 @@ class HomeController extends Controller
                 $category->setRelation(
                     'previewNews',
                     News::published()
+                        ->with(['category', 'user'])
                         ->where('category_id', $category->id)
                         ->latest('published_at')
                         ->take(4)

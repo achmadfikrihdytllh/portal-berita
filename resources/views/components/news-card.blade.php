@@ -35,7 +35,12 @@
         <div class="mt-2 flex items-center gap-2 text-xs text-ink/50 font-mono">
             <span>{{ $news->user->name ?? 'Redaksi' }}</span>
             <span>&middot;</span>
-            <span>{{ $news->published_at?->translatedFormat('d M Y') }}</span>
+            <span>{{ $news->published_at?->diffForHumans() }}</span>
+            <span>&middot;</span>
+            <span class="flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                {{ number_format($news->views) }}
+            </span>
         </div>
     </div>
 </article>

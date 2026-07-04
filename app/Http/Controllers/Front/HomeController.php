@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\News;
+use App\Models\PhotoGallery;
+use App\Models\Tag;
 use Illuminate\View\View;
 
 class HomeController extends Controller
@@ -30,11 +32,33 @@ class HomeController extends Controller
             ->take(5)
             ->get();
 
-        // Beberapa berita per kategori utama, untuk section "per kategori" di homepage
+        // Feed panjang untuk section "Jelajah Berita" (scroll independen)
+        $jelajah = News::published()
+            ->with(['category', 'user'])
+            ->latest('published_at')
+            ->take(20)
+            ->get();
+
+        // Galeri foto terbaru untuk carousel "Galeri Foto"
+        $galleries = PhotoGallery::published()
+            ->with('category')
+            ->latest('published_at')
+            ->take(8)
+            ->get();
+
+        // Tag terpopuler (berdasarkan jumlah berita published yang memakainya)
+        $popularTags = Tag::query()
+            ->withCount(['news' => fn ($q) => $q->published()])
+            ->having('news_count', '>', 0)
+            ->orderByDesc('news_count')
+            ->take(10)
+            ->get();
+
+        // Kategori untuk section "Sorotan Kategori" (3 kolom) + section lama di bawahnya
         $categorySections = Category::active()
             ->parents()
             ->orderBy('order')
-            ->take(4)
+            ->take(6)
             ->get()
             ->map(function (Category $category) {
                 $category->setRelation(
@@ -43,7 +67,7 @@ class HomeController extends Controller
                         ->with(['category', 'user'])
                         ->where('category_id', $category->id)
                         ->latest('published_at')
-                        ->take(4)
+                        ->take(5)
                         ->get()
                 );
 
@@ -51,6 +75,12 @@ class HomeController extends Controller
             })
             ->filter(fn ($category) => $category->previewNews->isNotEmpty());
 
-        return view('front.home', compact('headline', 'latest', 'trending', 'categorySections'));
+        $spotlightCategories = $categorySections->take(3);
+        $remainingCategories = $categorySections->slice(3);
+
+        return view('front.home', compact(
+            'headline', 'latest', 'trending', 'jelajah',
+            'galleries', 'popularTags', 'spotlightCategories', 'remainingCategories'
+        ));
     }
 }

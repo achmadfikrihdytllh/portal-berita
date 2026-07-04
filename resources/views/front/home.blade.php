@@ -188,6 +188,39 @@
         </section>
     @endif
 
+    {{-- ============ TOPIK PILIHAN: tag terpopuler ============ --}}
+    @if($popularTags->isNotEmpty())
+        <section class="py-10 border-b border-rule">
+            <h2 class="font-display text-2xl font-semibold mb-6">Topik Pilihan</h2>
+
+            <div class="flex flex-wrap gap-3">
+                @foreach($popularTags as $tag)
+                    <a href="{{ route('tags.show', $tag) }}"
+                       class="flex items-center gap-1.5 bg-ink/5 hover:bg-brand-primary hover:text-white transition rounded-full px-4 py-2 text-sm font-medium">
+                        <span class="text-brand-primary text-xs group-hover:text-white">#</span>
+                        {{ $tag->name }}
+                    </a>
+                @endforeach
+            </div>
+        </section>
+    @endif
+
+    {{-- ============ SECTION SISA KATEGORI (gaya lama, grid biasa) ============ --}}
+    @foreach($remainingCategories as $category)
+        <section class="py-10 border-b border-rule">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="font-display text-2xl font-semibold">{{ $category->name }}</h2>
+                <a href="{{ route('categories.show', $category) }}" class="text-sm font-mono text-brand-primary hover:underline">Lihat semua &rarr;</a>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8">
+                @foreach($category->previewNews->take(4) as $item)
+                    <x-news-card :news="$item" />
+                @endforeach
+            </div>
+        </section>
+    @endforeach
+
     {{-- ============ E-KORAN: carousel horizontal, scrollbar tersembunyi + tombol panah hologram ============ --}}
     @if($epapers->isNotEmpty())
         <section class="py-10 border-b border-rule">
@@ -245,39 +278,6 @@
             </div>
         </section>
     @endif
-
-    {{-- ============ TOPIK PILIHAN: tag terpopuler ============ --}}
-    @if($popularTags->isNotEmpty())
-        <section class="py-10 border-b border-rule">
-            <h2 class="font-display text-2xl font-semibold mb-6">Topik Pilihan</h2>
-
-            <div class="flex flex-wrap gap-3">
-                @foreach($popularTags as $tag)
-                    <a href="{{ route('tags.show', $tag) }}"
-                       class="flex items-center gap-1.5 bg-ink/5 hover:bg-brand-primary hover:text-white transition rounded-full px-4 py-2 text-sm font-medium">
-                        <span class="text-brand-primary text-xs group-hover:text-white">#</span>
-                        {{ $tag->name }}
-                    </a>
-                @endforeach
-            </div>
-        </section>
-    @endif
-
-    {{-- ============ SECTION SISA KATEGORI (gaya lama, grid biasa) ============ --}}
-    @foreach($remainingCategories as $category)
-        <section class="py-10 border-b border-rule">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="font-display text-2xl font-semibold">{{ $category->name }}</h2>
-                <a href="{{ route('categories.show', $category) }}" class="text-sm font-mono text-brand-primary hover:underline">Lihat semua &rarr;</a>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8">
-                @foreach($category->previewNews->take(4) as $item)
-                    <x-news-card :news="$item" />
-                @endforeach
-            </div>
-        </section>
-    @endforeach
 
     {{-- ============ JELAJAH BERITA: list scroll independen (scrollbar tipis) + sidebar Terpopuler ============ --}}
     <section class="py-10">

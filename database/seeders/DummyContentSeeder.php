@@ -9,6 +9,8 @@ use App\Models\News;
 use App\Models\PhotoGallery;
 use App\Models\PhotoGalleryImage;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -66,12 +68,13 @@ class DummyContentSeeder extends Seeder
         for ($i = 1; $i <= 10; $i++) {
             $date = now()->subDays($i - 1);
             $cover = $this->downloadRandomImage('epaper-' . $i, 'epapers');
+            $filePath = $this->generateDummyPdf($date, $faker);
 
             Epaper::create([
                 'title'        => 'Edisi ' . $date->translatedFormat('l, d F Y'),
                 'edition_date' => $date->toDateString(),
                 'cover_image'  => $cover,
-                'file_path'    => 'epapers/placeholder.pdf', // dummy, ganti manual nanti lewat admin
+                'file_path'    => $filePath,
                 'is_published' => true,
             ]);
 
@@ -122,6 +125,25 @@ class DummyContentSeeder extends Seeder
 
             $this->command->info("Galeri #{$i} dibuat: {$title} ({$imageCount} foto)");
         }
+    }
+
+    // ============ HELPER GENERATE PDF DUMMY ============
+    private function generateDummyPdf(Carbon $date, \Faker\Generator $faker): string
+    {
+        $html = '<h1>Edisi ' . $date->translatedFormat('l, d F Y') . '</h1>';
+        $html .= '<p>Dokumen PDF dummy untuk keperluan testing tampilan E-koran.</p>';
+
+        for ($i = 0; $i < 5; $i++) {
+            $html .= '<h3>' . rtrim($faker->sentence(8), '.') . '</h3>';
+            $html .= '<p>' . $faker->paragraph(6) . '</p>';
+        }
+
+        $pdf = Pdf::loadHTML($html);
+        $filename = 'epapers/' . Str::random(20) . '.pdf';
+
+        Storage::disk('public')->put($filename, $pdf->output());
+
+        return $filename;
     }
 
     // ============ HELPER DOWNLOAD GAMBAR ============

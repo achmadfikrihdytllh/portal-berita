@@ -221,7 +221,7 @@
 
                 <div class="flex gap-5 overflow-x-auto pb-2 snap-x snap-mandatory no-scrollbar" id="epaperScroll">
                     @foreach($epapers as $epaper)
-                        <a href="{{ route('epapers.show', $epaper) }}"
+                        <a href="{{ Storage::url($epaper->file_path) }}" target="_blank" rel="noopener"
                            class="group shrink-0 w-40 snap-start">
                             <div class="relative overflow-hidden rounded-lg bg-ink/5 aspect-[3/4] shadow-sm">
                                 @if($epaper->cover_image)

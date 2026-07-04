@@ -11,6 +11,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             SettingSeeder::class,
+            NewsSeeder::class,
+            DummyContentSeeder::class,
         ]);
 
         // Akun admin default untuk login pertama kali

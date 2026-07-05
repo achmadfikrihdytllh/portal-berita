@@ -25,10 +25,15 @@
                             <span class="text-slate-400 text-xs font-mono ml-1">{{ $comment->created_at->diffForHumans() }}</span>
                         </p>
                         <p class="text-sm text-slate-600 mt-1">{{ $comment->content }}</p>
-                        <a href="{{ route('news.show', $comment->news) }}" target="_blank"
-                           class="text-xs text-blue-600 hover:underline mt-1 inline-block">
-                            pada: {{ $comment->news->title }}
-                        </a>
+
+                        @if($comment->news)
+                            <a href="{{ route('news.show', $comment->news) }}" target="_blank"
+                               class="text-xs text-blue-600 hover:underline mt-1 inline-block">
+                                pada: {{ $comment->news->title }}
+                            </a>
+                        @else
+                            <p class="text-xs text-slate-400 mt-1 italic">Berita terkait sudah dihapus</p>
+                        @endif
                     </div>
 
                     <div class="shrink-0 flex flex-col items-end gap-2">

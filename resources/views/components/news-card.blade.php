@@ -4,7 +4,7 @@
     <a href="{{ route('news.show', $news) }}" class="block overflow-hidden rounded-lg bg-ink/5 aspect-[16/10]">
         @if($news->thumbnail)
             <img
-                src="{{ Storage::url($news->thumbnail) }}"
+                src="{{ $news->thumbnail_url }}"
                 alt="{{ $news->title }}"
                 loading="lazy"
                 class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"

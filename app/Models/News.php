@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\ResolvesMediaUrl;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,6 +11,7 @@ use Illuminate\Support\Str;
 class News extends Model
 {
     use HasFactory, SoftDeletes;
+    use ResolvesMediaUrl;
 
     protected $table = 'news';
 
@@ -32,6 +34,16 @@ class News extends Model
                 $news->slug = Str::slug($news->title) . '-' . Str::random(6);
             }
         });
+    }
+
+    public function getThumbnailUrlAttribute(): ?string
+    {
+        return $this->resolveMediaUrl($this->thumbnail);
+    }
+
+    public function getOgImageUrlAttribute(): ?string
+    {
+        return $this->resolveMediaUrl($this->og_image);
     }
 
     public function user()

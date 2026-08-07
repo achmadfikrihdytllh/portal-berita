@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\ResolvesMediaUrl;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -10,6 +11,7 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
+    use ResolvesMediaUrl;
 
     protected $fillable = [
         'name',
@@ -30,6 +32,11 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getAvatarUrlAttribute(): ?string
+    {
+        return $this->resolveMediaUrl($this->avatar);
     }
 
     public function news()

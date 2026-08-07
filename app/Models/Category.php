@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\ResolvesMediaUrl;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -9,6 +10,7 @@ use Illuminate\Support\Str;
 class Category extends Model
 {
     use HasFactory;
+    use ResolvesMediaUrl;
 
     protected $fillable = [
         'parent_id', 'name', 'slug', 'description', 'icon', 'is_active', 'order',
@@ -40,6 +42,11 @@ class Category extends Model
     public function news()
     {
         return $this->hasMany(News::class);
+    }
+
+    public function getIconUrlAttribute(): ?string
+    {
+        return $this->resolveMediaUrl($this->icon);
     }
 
     public function scopeActive($query)

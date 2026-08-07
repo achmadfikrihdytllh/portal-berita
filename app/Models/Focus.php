@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\ResolvesMediaUrl;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -9,6 +10,7 @@ use Illuminate\Support\Str;
 class Focus extends Model
 {
     use HasFactory;
+    use ResolvesMediaUrl;
 
     protected $table = 'focuses';
 
@@ -17,6 +19,11 @@ class Focus extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    public function getCoverImageUrlAttribute(): ?string
+    {
+        return $this->resolveMediaUrl($this->cover_image);
+    }
 
     protected static function booted(): void
     {

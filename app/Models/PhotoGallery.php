@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\ResolvesMediaUrl;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -9,6 +10,7 @@ use Illuminate\Support\Str;
 class PhotoGallery extends Model
 {
     use HasFactory;
+    use ResolvesMediaUrl;
 
     protected $table = 'photo_galleries';
 
@@ -20,6 +22,11 @@ class PhotoGallery extends Model
     protected $casts = [
         'published_at' => 'datetime',
     ];
+
+    public function getCoverImageUrlAttribute(): ?string
+    {
+        return $this->resolveMediaUrl($this->cover_image);
+    }
 
     protected static function booted(): void
     {

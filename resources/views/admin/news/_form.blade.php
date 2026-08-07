@@ -84,7 +84,7 @@
             <label class="block text-sm font-medium mb-1">Thumbnail</label>
             <input type="file" name="thumbnail" accept="image/*" class="w-full text-sm border border-slate-300 rounded px-3 py-2">
             @if(!empty($news?->thumbnail))
-                <img src="{{ Storage::url($news->thumbnail) }}" class="mt-2 rounded aspect-video object-cover">
+                <img src="{{ $news->thumbnail_url }}" class="mt-2 rounded aspect-video object-cover">
             @endif
             @error('thumbnail')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
         </div>

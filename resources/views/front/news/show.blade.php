@@ -24,7 +24,7 @@
         </div>
 
         @if($news->thumbnail)
-            <img src="{{ Storage::url($news->thumbnail) }}" alt="{{ $news->title }}"
+            <img src="{{ $news->thumbnail_url }}" alt="{{ $news->title }}"
                  class="mt-6 w-full rounded-lg object-cover aspect-[16/9]">
         @endif
 

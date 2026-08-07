@@ -23,7 +23,7 @@
 
                         <a href="{{ route('news.show', $item) }}" class="shrink-0 block w-16 h-12 rounded overflow-hidden bg-ink/5">
                             @if($item->thumbnail)
-                                <img src="{{ Storage::url($item->thumbnail) }}" alt="{{ $item->title }}" class="w-full h-full object-cover">
+                                <img src="{{ $item->thumbnail_url }}" alt="{{ $item->title }}" class="w-full h-full object-cover">
                             @else
                                 <div class="w-full h-full flex items-center justify-center text-ink/30 text-[9px] font-mono text-center px-1">
                                     {{ $item->category->name ?? 'Berita' }}
@@ -86,7 +86,7 @@
                             <a href="{{ route('news.show', $featured) }}" class="group block mb-4">
                                 <div class="relative overflow-hidden rounded-lg bg-ink/5 aspect-[16/10]">
                                     @if($featured->thumbnail)
-                                        <img src="{{ Storage::url($featured->thumbnail) }}" alt="{{ $featured->title }}"
+                                        <img src="{{ $featured->thumbnail_url }}" alt="{{ $featured->title }}"
                                              class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105">
                                     @else
                                         <div class="h-full w-full flex items-center justify-center text-ink/30 font-display text-sm">
@@ -163,7 +163,7 @@
                            class="group shrink-0 w-56 snap-start">
                             <div class="relative overflow-hidden rounded-lg bg-ink/5 aspect-[4/3]">
                                 @if($gallery->cover_image)
-                                    <img src="{{ Storage::url($gallery->cover_image) }}" alt="{{ $gallery->title }}"
+                                    <img src="{{ $gallery->cover_image_url }}" alt="{{ $gallery->title }}"
                                          class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105">
                                 @else
                                     <div class="h-full w-full flex items-center justify-center text-ink/30 font-display text-sm">
@@ -254,11 +254,11 @@
 
                 <div class="flex gap-5 overflow-x-auto pb-2 snap-x snap-mandatory no-scrollbar" id="epaperScroll">
                     @foreach($epapers as $epaper)
-                        <a href="{{ Storage::url($epaper->file_path) }}" target="_blank" rel="noopener"
+                        <a href="{{ $epaper->file_path_url }}" target="_blank" rel="noopener"
                            class="group shrink-0 w-40 snap-start">
                             <div class="relative overflow-hidden rounded-lg bg-ink/5 aspect-[3/4] shadow-sm">
                                 @if($epaper->cover_image)
-                                    <img src="{{ Storage::url($epaper->cover_image) }}" alt="{{ $epaper->title }}"
+                                    <img src="{{ $epaper->cover_image_url }}" alt="{{ $epaper->title }}"
                                          class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105">
                                 @else
                                     <div class="h-full w-full flex items-center justify-center text-ink/30 font-display text-sm text-center px-2">
@@ -289,7 +289,7 @@
                     <div class="flex gap-4 pb-6 border-b border-rule last:border-b-0">
                         <a href="{{ route('news.show', $item) }}" class="shrink-0 block w-28 h-20 sm:w-36 sm:h-24 rounded overflow-hidden bg-ink/5">
                             @if($item->thumbnail)
-                                <img src="{{ Storage::url($item->thumbnail) }}" alt="{{ $item->title }}" class="w-full h-full object-cover">
+                                <img src="{{ $item->thumbnail_url }}" alt="{{ $item->title }}" class="w-full h-full object-cover">
                             @else
                                 <div class="w-full h-full flex items-center justify-center text-ink/30 text-[10px] font-mono text-center px-1">
                                     {{ $item->category->name ?? 'Berita' }}

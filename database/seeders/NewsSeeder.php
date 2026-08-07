@@ -5,8 +5,8 @@ use App\Models\News;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 class NewsSeeder extends Seeder
 {
     public function run(): void
@@ -47,17 +47,28 @@ class NewsSeeder extends Seeder
     }
     private function downloadRandomImage(int $seed): ?string
     {
+        $tempPath = null;
         try {
             $response = Http::timeout(10)->get("https://picsum.photos/seed/berita{$seed}/800/500");
             if (! $response->successful()) {
                 return null;
             }
-            $filename = 'news/' . Str::random(20) . '.jpg';
-            Storage::disk('cloudinary')->put($filename, $response->body());
-            return Storage::disk('cloudinary')->url($filename);
+
+            $tempPath = tempnam(sys_get_temp_dir(), 'news_') . '.jpg';
+            file_put_contents($tempPath, $response->body());
+
+            $uploaded = Cloudinary::upload($tempPath, [
+                'folder' => 'news',
+            ]);
+
+            return $uploaded->getSecurePath();
         } catch (\Throwable $e) {
-            $this->command->warn("Gagal download gambar untuk berita #{$seed}: {$e->getMessage()}");
+            $this->command->warn("Gagal upload gambar untuk berita #{$seed}: {$e->getMessage()}");
             return null;
+        } finally {
+            if ($tempPath && file_exists($tempPath)) {
+                unlink($tempPath);
+            }
         }
     }
 }

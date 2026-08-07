@@ -27,7 +27,7 @@
                     <tr>
                         <td class="px-4 py-3">
                             @if($gallery->cover_image)
-                                <img src="{{ asset('storage/'.$gallery->cover_image) }}" class="w-14 h-10 object-cover rounded">
+                                <img src="{{ $gallery->cover_image_url }}" class="w-14 h-10 object-cover rounded">
                             @endif
                         </td>
                         <td class="px-4 py-3 font-medium max-w-xs truncate">{{ $gallery->title }}</td>

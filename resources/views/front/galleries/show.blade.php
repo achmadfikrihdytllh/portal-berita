@@ -23,7 +23,7 @@
     <div class="space-y-8">
         @foreach($gallery->images as $image)
             <figure>
-                <img src="{{ asset('storage/'.$image->image_path) }}" alt="{{ $image->caption }}"
+                <img src="{{ $image->image_url }}" alt="{{ $image->caption }}"
                      class="w-full rounded-lg">
                 @if($image->caption)
                     <figcaption class="text-sm text-slate-500 mt-2 text-center">{{ $image->caption }}</figcaption>

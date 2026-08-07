@@ -19,7 +19,7 @@
         <label class="block text-sm font-medium mb-1">Cover (gambar halaman depan)</label>
         @isset($epaper)
             @if($epaper->cover_image)
-                <img src="{{ asset('storage/'.$epaper->cover_image) }}" class="w-24 rounded mb-2">
+                <img src="{{ $epaper->cover_image_url }}" class="w-24 rounded mb-2">
             @endif
         @endisset
         <input type="file" name="cover_image" accept="image/*" class="w-full text-sm">
@@ -30,7 +30,7 @@
         <label class="block text-sm font-medium mb-1">File PDF Edisi</label>
         @isset($epaper)
             <p class="text-xs text-slate-500 mb-1">
-                File saat ini: <a href="{{ asset('storage/'.$epaper->file_path) }}" target="_blank" class="text-blue-600 hover:underline">lihat PDF</a>
+                File saat ini: <a href="{{ $epaper->file_path_url }}" target="_blank" class="text-blue-600 hover:underline">lihat PDF</a>
             </p>
         @endisset
         <input type="file" name="file_path" accept="application/pdf" class="w-full text-sm">

@@ -20,7 +20,7 @@
                     <div class="grid grid-cols-4 gap-3">
                         @foreach($gallery->images as $image)
                             <div class="relative group">
-                                <img src="{{ asset('storage/'.$image->image_path) }}" class="w-full aspect-square object-cover rounded border">
+                                <img src="{{ $image->image_url }}" class="w-full aspect-square object-cover rounded border">
                                 @if($image->caption)
                                     <p class="text-xs text-slate-500 mt-1 truncate">{{ $image->caption }}</p>
                                 @endif
@@ -64,7 +64,7 @@
             <label class="block text-sm font-medium mb-1">Cover Galeri</label>
             @isset($gallery)
                 @if($gallery->cover_image)
-                    <img src="{{ asset('storage/'.$gallery->cover_image) }}" class="w-full rounded mb-2 aspect-video object-cover">
+                    <img src="{{ $gallery->cover_image_url }}" class="w-full rounded mb-2 aspect-video object-cover">
                 @endif
             @endisset
             <input type="file" name="cover_image" accept="image/*" class="w-full text-sm">

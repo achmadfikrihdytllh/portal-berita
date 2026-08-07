@@ -27,7 +27,7 @@
                     <tr>
                         <td class="px-4 py-3">
                             @if($epaper->cover_image)
-                                <img src="{{ asset('storage/'.$epaper->cover_image) }}" class="w-10 h-14 object-cover rounded">
+                                <img src="{{ $epaper->cover_image_url }}" class="w-10 h-14 object-cover rounded">
                             @endif
                         </td>
                         <td class="px-4 py-3 font-medium">{{ $epaper->title }}</td>

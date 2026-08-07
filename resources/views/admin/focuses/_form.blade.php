@@ -30,7 +30,7 @@
             <label class="block text-sm font-medium mb-1">Cover</label>
             @isset($focus)
                 @if($focus->cover_image)
-                    <img src="{{ asset('storage/'.$focus->cover_image) }}" class="w-full rounded mb-2 aspect-video object-cover">
+                    <img src="{{ $focus->cover_image_url }}" class="w-full rounded mb-2 aspect-video object-cover">
                 @endif
             @endisset
             <input type="file" name="cover_image" accept="image/*" class="w-full text-sm">

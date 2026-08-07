@@ -13,7 +13,7 @@
     </nav>
 
     @if($focus->cover_image)
-        <img src="{{ asset('storage/'.$focus->cover_image) }}" alt="{{ $focus->title }}"
+        <img src="{{ $focus->cover_image_url }}" alt="{{ $focus->title }}"
              class="w-full aspect-video object-cover rounded-lg mb-6">
     @endif
 
@@ -26,7 +26,7 @@
         @forelse($focus->news as $item)
             <a href="{{ route('news.show', $item) }}" class="flex gap-4 group border-b border-slate-100 pb-4">
                 @if($item->thumbnail)
-                    <img src="{{ asset('storage/'.$item->thumbnail) }}" alt="{{ $item->title }}"
+                    <img src="{{ $item->thumbnail_url }}" alt="{{ $item->title }}"
                          class="w-32 h-20 object-cover rounded shrink-0">
                 @endif
                 <div>

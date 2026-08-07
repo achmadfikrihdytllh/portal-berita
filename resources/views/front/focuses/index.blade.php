@@ -12,7 +12,7 @@
             <a href="{{ route('focuses.show', $focus) }}" class="group block">
                 <div class="aspect-video bg-slate-100 rounded-lg overflow-hidden mb-3">
                     @if($focus->cover_image)
-                        <img src="{{ asset('storage/'.$focus->cover_image) }}" alt="{{ $focus->title }}"
+                        <img src="{{ $focus->cover_image_url }}" alt="{{ $focus->title }}"
                              class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                     @endif
                 </div>

@@ -12,7 +12,7 @@
             <a href="{{ route('galleries.show', $gallery) }}" class="group block">
                 <div class="aspect-square bg-slate-100 rounded-lg overflow-hidden relative">
                     @if($gallery->cover_image)
-                        <img src="{{ asset('storage/'.$gallery->cover_image) }}" alt="{{ $gallery->title }}"
+                        <img src="{{ $gallery->cover_image_url }}" alt="{{ $gallery->title }}"
                              class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                     @endif
                     <span class="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-0.5 rounded-full">

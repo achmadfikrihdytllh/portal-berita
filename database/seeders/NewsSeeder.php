@@ -6,11 +6,15 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Cloudinary\Cloudinary;
 class NewsSeeder extends Seeder
 {
+    private ?Cloudinary $cloudinary = null;
+
     public function run(): void
     {
+        $this->cloudinary = new Cloudinary(env('CLOUDINARY_URL'));
+
         $categories = Category::all();
         $users = User::all();
         if ($categories->isEmpty() || $users->isEmpty()) {
@@ -57,11 +61,11 @@ class NewsSeeder extends Seeder
             $tempPath = tempnam(sys_get_temp_dir(), 'news_') . '.jpg';
             file_put_contents($tempPath, $response->body());
 
-            $uploaded = Cloudinary::upload($tempPath, [
+            $result = $this->cloudinary->uploadApi()->upload($tempPath, [
                 'folder' => 'news',
             ]);
 
-            return $uploaded->getSecurePath();
+            return $result['secure_url'] ?? null;
         } catch (\Throwable $e) {
             $this->command->warn("Gagal upload gambar untuk berita #{$seed}: {$e->getMessage()}");
             return null;

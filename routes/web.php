@@ -3,12 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
-Route::get('/run-link-def456', function () {
-    if (request('key') !== 'rahasia-link-portal-2026') {
+Route::get('/run-seed-ghi012', function () {
+    if (request('key') !== 'rahasia-seeder-cloudinary-2026') {
         abort(403);
     }
-    Artisan::call('storage:link');
-    return 'Storage link berhasil dibuat: ' . Artisan::output();
+    Artisan::call('db:seed', ['--force' => true]);
+    return 'Seeder berhasil dijalankan: ' . Artisan::output();
 });
 
 require base_path('routes/auth.php');

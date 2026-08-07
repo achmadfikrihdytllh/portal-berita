@@ -9,13 +9,6 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->call([
-            SettingSeeder::class,
-            NewsSeeder::class,
-            DummyContentSeeder::class,
-        ]);
-
-        // Akun admin default untuk login pertama kali
         User::updateOrCreate(
             ['email' => 'admin@portalberita.test'],
             [
@@ -25,5 +18,12 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
+
+        $this->call([
+            SettingSeeder::class,
+            CategorySeeder::class,
+            NewsSeeder::class,
+            DummyContentSeeder::class,
+        ]);
     }
 }

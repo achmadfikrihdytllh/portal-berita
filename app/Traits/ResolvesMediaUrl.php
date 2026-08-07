@@ -12,21 +12,22 @@ trait ResolvesMediaUrl
             return null;
         }
 
-        return str_starts_with($value, 'http://') || str_starts_with($value, 'https://')
-            ? $value
-            : $this->resolveStoredMediaUrl($value);
-    }
-
-    protected function resolveStoredMediaUrl(string $value): string
-    {
-        if (Storage::disk('public')->exists($value)) {
-            return Storage::url($value);
+        // 1. Sudah berupa URL absolut (Cloudinary secure_url dari NewsSeeder, dll)
+        if (str_starts_with($value, 'http://') || str_starts_with($value, 'https://')) {
+            return $value;
         }
 
+        // 2. File ada di disk lokal 'public' (dari DummyContentSeeder)
+        if (Storage::disk('public')->exists($value)) {
+            return Storage::disk('public')->url($value);
+        }
+
+        // 3. Fallback: anggap ini public_id Cloudinary mentah, bentuk URL manual
+        //    (tanpa API call, jadi tidak akan pernah throw NotFound)
         $cloudName = config('filesystems.disks.cloudinary.cloud');
 
         if (! $cloudName) {
-            return Storage::url($value);
+            return Storage::disk('public')->url($value);
         }
 
         $resourceType = str_ends_with(strtolower($value), '.pdf') ? 'raw' : 'image';
